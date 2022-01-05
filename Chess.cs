@@ -1,4 +1,5 @@
 using System;
+
 namespace Chess {
     enum ChessColor {
         White,
@@ -16,6 +17,7 @@ namespace Chess {
         public ChessColor Color; // 1 == White; 0 == Black;
         public static char Simbol(ChessColor c = ChessColor.White) { return ' '; }
         public abstract bool move(int x1, int y1, int x2, int y2);
+        public abstract bool attack(int x1, int y1, int x2, int y2);
         public ChessPiece(ChessColor c = ChessColor.White) {Color = c;}
         public override String ToString() {
             return Convert.ToString(Simbol());
@@ -28,6 +30,7 @@ namespace Chess {
         {
             return Math.Abs(x2 - x1) <= 1 && Math.Abs(y2 - y1) <= 1;
         }
+        public override bool attack(int x1, int y1, int x2, int y2) { return move(x1, y1, x2, y2); }
         public King(ChessColor c) : base(c) {}
         public override String ToString() {
             return Convert.ToString(Simbol(Color));
@@ -39,6 +42,7 @@ namespace Chess {
         {
             return y1 == y2 || x1 == x2 || Math.Abs(x2 - x1) == Math.Abs(y2 - y1);
         }
+        public override bool attack(int x1, int y1, int x2, int y2) { return move(x1, y1, x2, y2); }
         public Queen(ChessColor c) : base(c) {}
         public override String ToString() {
             return Convert.ToString(Simbol(Color));
@@ -50,6 +54,7 @@ namespace Chess {
         {
             return y1 == y2 || x1 == x2;
         }
+        public override bool attack(int x1, int y1, int x2, int y2) { return move(x1, y1, x2, y2); }
         public Rook(ChessColor c) : base(c) {}
         public override String ToString() {
             return Convert.ToString(Simbol(Color));
@@ -61,6 +66,7 @@ namespace Chess {
         {
             return Math.Abs(x2 - x1) == Math.Abs(y2 - y1);
         }
+        public override bool attack(int x1, int y1, int x2, int y2) { return move(x1, y1, x2, y2); }
         public Bishop(ChessColor c) : base(c) {}
         public override String ToString() {
             return Convert.ToString(Simbol(Color));
@@ -72,6 +78,7 @@ namespace Chess {
         {
             return Math.Abs(x2 - x1) == 2 && Math.Abs(y2 - y1) == 1 || Math.Abs(x2 - x1) == 1 && Math.Abs(y2 - y1) == 2;
         }
+        public override bool attack(int x1, int y1, int x2, int y2) { return move(x1, y1, x2, y2); }
         public Horse(ChessColor c) : base(c) {}
         public override String ToString() {
             return Convert.ToString(Simbol(Color));
@@ -81,7 +88,10 @@ namespace Chess {
         public new static char Simbol(ChessColor c = ChessColor.White) { return c == ChessColor.Black ? '♙' : '♟'; }
         public override bool move(int x1, int y1, int x2, int y2)
         {
-            return Color == ChessColor.White ? (y1 + 1 == y2) : (y1 - 1 == y2);
+            return Color == ChessColor.White ? (y1 + 1 == y2) || (y1 == 6 ? y1 + 2 == y2 : false) : (y1 - 1 == y2) || (y1 == 1 ? y1 - 2 == y2 : false) ;
+        }
+        public override bool attack(int x1, int y1, int x2, int y2) {
+            return move(x1, y1, x2, y2) && (x1 + 1 == x2 || x1 - 1 == x2);
         }
         public Pawn(ChessColor c) : base(c) {}
         public override String ToString() {
@@ -91,6 +101,23 @@ namespace Chess {
     
     class ChessBoard {
         public ChessPiece[,] Board = new ChessPiece[8, 8];
+        public static int[] ConvertPosition(char y, char x) {
+            var res = new int[2] {y - '0' - 1, x - 'a'};
+            if(res[0] < 0 || res[0] > 7) throw new ArgumentOutOfRangeException("Position Y", y, "Going beyond the board");
+            if(res[1] < 0 || res[1] > 7) throw new ArgumentOutOfRangeException("Position X", x, "Going beyond the board");
+            return res;
+        }
+        public static int[] ConvertPosition(string str) {
+            return ConvertPosition(str[0], str[1]);
+        }
+        public static string ConvertPosition(int y, int x) {
+            if(y < 0 || y > 7) throw new ArgumentOutOfRangeException("Position Y", y, "Going beyond the board");
+            if(x < 0 || x > 7) throw new ArgumentOutOfRangeException("Position X", x, "Going beyond the board");
+            return $"{(char)('0'+y+1)}{(char)('a'+x)}";
+        }
+        public static string ConvertPosition(int[] p) {
+            return ConvertPosition(p[0], p[1]);
+        }
         public void PlacePieces() {
             // Place pawns
             for(int i = 0; i < 8; i++) {
