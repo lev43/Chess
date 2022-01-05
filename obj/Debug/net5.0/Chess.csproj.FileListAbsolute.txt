@@ -1,0 +1,16 @@
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/Chess.csproj.AssemblyReference.cache
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/Chess.GeneratedMSBuildEditorConfig.editorconfig
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/Chess.AssemblyInfoInputs.cache
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/Chess.AssemblyInfo.cs
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/Chess.csproj.CoreCompileInputs.cache
+/home/lev43/Документы/code/C#/Chess/bin/Debug/net5.0/Chess
+/home/lev43/Документы/code/C#/Chess/bin/Debug/net5.0/Chess.deps.json
+/home/lev43/Документы/code/C#/Chess/bin/Debug/net5.0/Chess.runtimeconfig.json
+/home/lev43/Документы/code/C#/Chess/bin/Debug/net5.0/Chess.runtimeconfig.dev.json
+/home/lev43/Документы/code/C#/Chess/bin/Debug/net5.0/Chess.dll
+/home/lev43/Документы/code/C#/Chess/bin/Debug/net5.0/ref/Chess.dll
+/home/lev43/Документы/code/C#/Chess/bin/Debug/net5.0/Chess.pdb
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/Chess.dll
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/ref/Chess.dll
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/Chess.pdb
+/home/lev43/Документы/code/C#/Chess/obj/Debug/net5.0/Chess.genruntimeconfig.cache
