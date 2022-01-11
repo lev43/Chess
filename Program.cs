@@ -1,21 +1,15 @@
 ﻿using System;
 using Chess;
 
-namespace Chess
+class Game
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            var board = new ChessBoard();
-            // b.PlacePieces();
-            // b.PrintBoard(ChessColor.White);
-            // Console.WriteLine();
-            // b.PrintBoard(ChessColor.Black);
-            char a = Console.ReadKey().KeyChar, b = Console.ReadKey().KeyChar;
-            Console.WriteLine($"\nChar1: {a}\nChar2: {b}");
-            // Console.WriteLine($"{ChessBoard.ConvertPosition(a, b)[0]}-{ChessBoard.ConvertPosition(a, b)[1]}");
-            // Console.WriteLine($"{ChessBoard.ConvertPosition(ChessBoard.ConvertPosition(a, b))}");
-        }
+        var board = new ChessBoard();
+        ChessColor turn = ChessColor.White;
+        board.PlacePieces();
+        Console.WriteLine("Game has started");
+        VictoryStatus v = board.CheckVictory();
+        Console.WriteLine($"Victory: {v.Victory}\nStatus: {v.Status}\nReason: {v.Reason}\nColor: {v.Color}");
     }
 }
