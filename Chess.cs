@@ -136,12 +136,6 @@ namespace Chess {
             }
             if(WhiteKing == null) return new VictoryStatus(2);
             if(BlackKing == null) return new VictoryStatus(1);
-            bool w = false, b = false;
-            for(int x = WhiteKing[0] - 1; x <= WhiteKing[0] + 1; x++)
-                for(int y = WhiteKing[1] - 1; y < WhiteKing[1] + 1; y++)
-                    for(int i = 0; i < 8; i++)
-                        for(int j = 0; j < 8; j++)
-                            if(Board[j, i] != null && Board[j, i].Attack(j, i, y, x)) { w = true; }
 
             return new VictoryStatus(0);
         }
