@@ -122,36 +122,141 @@ namespace Chess {
     
     class ChessBoard {
         public ChessPiece[,] Board = new ChessPiece[8, 8];
+        private void CheckPosition(int x, int y) {
+            Console.WriteLine("CheckPosition{" + $"{ConvertPosition(x, y)}" + "}" + $": ({Board[x, y]?.ToString() ?? " "}) [{Board[x, y]?.Color.ToString() ?? "     "}]");
+        }
+
+        public void CheckPosition(int x1, int y1, int x2, int y2) {
+            Console.WriteLine("CheckPosition{" + $"{ConvertPosition(x1, y1)}" + "}" + $": ({Board[x1, y1]?.ToString() ?? " "}) [{Board[x1, y1]?.Color.ToString() ?? "     "}] Attack to <{ConvertPosition(x2, y2)}> is {Board[x1, y1]?.Attack(x1, y1, x2, y2).ToString() ?? "Unknow"}");
+        }
+        public bool CheckAttackTo(int px, int py, ChessColor c) {
+            bool w = false;
+            for(int x = px+1; x < 8; x++) {
+                // CheckPosition(x, py, px, py);
+                if(Board[x, py] != null) {
+                    if(Board[x, py].Color != c)
+                        w = w || Board[x, py].Attack(x, py, px, py);
+                    break;
+                }
+            }
+            for(int x = px-1; x >= 0; x--) {
+                // CheckPosition(x, py, px, py);
+                if(Board[x, py] != null) {
+                    if(Board[x, py].Color != c)
+                        w = w || Board[x, py].Attack(x, py, px, py);
+                    break;
+                }
+            }
+
+            for(int y = py+1; y < 8; y++) {
+                // CheckPosition(px, y, px, py);
+                if(Board[px, y] != null) {
+                    if(Board[px, y].Color != c)
+                        w = w || Board[px, y].Attack(px, y, px, py);
+                    break;
+                }
+            }
+            for(int y = py-1; y >= 0; y--) {
+                // CheckPosition(px, y, px, py);
+                if(Board[px, y] != null) {
+                    if(Board[px, y].Color != c)
+                        w = w || Board[px, y].Attack(px, y, px, py);
+                    break;
+                }
+            }
+
+            for(int x = px+1, y = py+1; x < 8 && y < 8; x++, y++) {
+                // CheckPosition(x, y, px, py);
+                if(Board[x, y] != null) {
+                    if(Board[x, y].Color != c)
+                        w = w || Board[x, y].Attack(x, y, px, py);
+                    break;
+                }
+            }
+            for(int x = px-1, y = py-1; x >= 0 && y >= 0; x--, y--) {
+                // CheckPosition(x, y, px, py);
+                if(Board[x, y] != null) {
+                    if(Board[x, y].Color != c)
+                        w = w || Board[x, y].Attack(x, y, px, py);
+                    break;
+                }
+            }
+            for(int x = px+1, y = py-1; x < 8 && y >= 0; x++, y--) {
+                // CheckPosition(x, y, px, py);
+                if(Board[x, y] != null) {
+                    if(Board[x, y].Color != c)
+                        w = w || Board[x, y].Attack(x, y, px, py);
+                    break;
+                }
+            }
+            for(int x = px-1, y = py+1; x >= 0 && y < 8; x--, y++) {
+                // CheckPosition(x, y, px, py);
+                if(Board[x, y] != null) {
+                    if(Board[x, y].Color != c)
+                        w = w || Board[x, y].Attack(x, y, px, py);
+                    break;
+                }
+            }
+            return w;
+        }
         public VictoryStatus CheckVictory() {
             int[] WhiteKing = null, BlackKing = null;
             for(int i = 0; i < 8; i++) {
                 for(int j = 0; j < 8; j++) {
-                    if(Board[j, i] != null && Board[j, i].GetType().Name == "King") {
-                        if(Board[j, i].Color == ChessColor.White) 
-                            WhiteKing = new int[2] {j, i};
+                    if(Board[i, j] != null && Board[i, j].GetType().Name == "King") {
+                        if(Board[i, j].Color == ChessColor.White) 
+                            WhiteKing = new int[2] {i, j};
                         else
-                            BlackKing = new int[2] {j, i};
+                            BlackKing = new int[2] {i, j};
                     }
                 }
             }
             if(WhiteKing == null) return new VictoryStatus(2);
             if(BlackKing == null) return new VictoryStatus(1);
 
+            bool w = CheckAttackTo(WhiteKing[0], WhiteKing[1], ChessColor.White);
+
+            Console.WriteLine(w);
+            for(int x = WhiteKing[0]-1; x <= WhiteKing[0]+1 && w == true; x++)
+                for(int y = WhiteKing[1]-1; y <= WhiteKing[1]+1 && w == true; y++)
+                    if( x >= 0 && x < 8 && y >= 0 && y < 8 
+                        && !(x == WhiteKing[0] && y == WhiteKing[1])
+                        && (Board[x, y] == null || Board[x, y].Color == ChessColor.Black)
+                        && !CheckAttackTo(x, y, ChessColor.White)
+                    ) w = false;
+
+            Console.WriteLine(w);
+            if(w == true) return new VictoryStatus(2);
+
+            bool b = CheckAttackTo(BlackKing[0], BlackKing[1], ChessColor.Black);
+
+            Console.WriteLine(b);
+            for(int x = BlackKing[0]-1; x <= BlackKing[0]+1 && w == true; x++)
+                for(int y = BlackKing[1]-1; y <= BlackKing[1]+1 && w == true; y++)
+                    if( x >= 0 && x < 8 && y >= 0 && y < 8 
+                        && !(x == BlackKing[0] && y == BlackKing[1])
+                        && (Board[x, y] == null || Board[x, y].Color == ChessColor.White)
+                        && !CheckAttackTo(x, y, ChessColor.Black)
+                    ) b = false;
+
+            Console.WriteLine(b);
+            if(b == true) return new VictoryStatus(1);
+
             return new VictoryStatus(0);
         }
-        public static int[] ConvertPosition(char y, char x) {
-            var res = new int[2] {y - '0' - 1, x - 'a'};
-            if(res[0] < 0 || res[0] > 7) throw new ArgumentOutOfRangeException("Position Y", y, "Going beyond the board");
-            if(res[1] < 0 || res[1] > 7) throw new ArgumentOutOfRangeException("Position X", x, "Going beyond the board");
+        public static int[] ConvertPosition(char x, char y) {
+            var res = new int[2] {x - '0' - 1, y - 'a'};
+            if(res[0] < 0 || res[0] > 7) throw new ArgumentOutOfRangeException("Position X", x, "Going beyond the board");
+            if(res[1] < 0 || res[1] > 7) throw new ArgumentOutOfRangeException("Position Y", y, "Going beyond the board");
             return res;
         }
         public static int[] ConvertPosition(string str) {
             return ConvertPosition(str[0], str[1]);
         }
-        public static string ConvertPosition(int y, int x) {
-            if(y < 0 || y > 7) throw new ArgumentOutOfRangeException("Position Y", y, "Going beyond the board");
+        public static string ConvertPosition(int x, int y) {
             if(x < 0 || x > 7) throw new ArgumentOutOfRangeException("Position X", x, "Going beyond the board");
-            return $"{(char)('0'+y+1)}{(char)('a'+x)}";
+            if(y < 0 || y > 7) throw new ArgumentOutOfRangeException("Position Y", y, "Going beyond the board");
+            return $"{(char)('0'+x+1)}{(char)('a'+y)}";
         }
         public static string ConvertPosition(int[] p) {
             return ConvertPosition(p[0], p[1]);
